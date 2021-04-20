@@ -1,0 +1,8 @@
+{
+  "name": "3Rounds",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "angular",
+  "id": "830e791a"
+}
