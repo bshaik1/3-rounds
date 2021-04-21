@@ -1,16 +1,21 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
+import { Observable } from 'rxjs';
+import { ContextService } from 'src/app/core/services/context.service';
 
 @Component({
   selector: 'rnds-layout',
   templateUrl: './layout.component.html',
-  styleUrls: ['./layout.component.css'],
+  styleUrls: ['./layout.component.scss'],
 })
 export class LayoutComponent implements OnInit {
-  folder: string;
-  constructor(private activatedRoute: ActivatedRoute) {}
-
-  ngOnInit() {
-    this.folder = this.activatedRoute.snapshot.paramMap.get('id');
+  title: Observable<string>;
+  constructor(
+    private activatedRoute: ActivatedRoute,
+    private contextService: ContextService
+  ) {
+    this.title = contextService.title;
   }
+
+  ngOnInit() {}
 }

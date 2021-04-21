@@ -3,9 +3,9 @@
     <ion-buttons slot="start">
       <ion-menu-button></ion-menu-button>
     </ion-buttons>
-    <ion-title>New Game</ion-title>
+    <ion-title>{{ title | async }}</ion-title>
   </ion-toolbar>
 </ion-header>
-<ion-content [fullscreen]="true" class="ion-padding">
+<ion-content class="ion-padding">
   <ion-router-outlet></ion-router-outlet>
 </ion-content>
