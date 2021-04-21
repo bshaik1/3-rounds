@@ -1,7 +1,10 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable, throwError } from 'rxjs';
-import { catchError } from 'rxjs/operators';
+import {
+  AngularFirestoreCollection,
+  AngularFirestore,
+} from '@angular/fire/firestore';
+import { Game } from 'src/app/shared/models/game.model';
 import { environment } from 'src/environments/environment';
 
 @Injectable({
@@ -9,13 +12,18 @@ import { environment } from 'src/environments/environment';
 })
 export class DataService {
   apiUrl = environment.apiUrl;
-  constructor(private http: HttpClient) {}
-  createRoom(options: { roomName: string; numberOfTeams: number }) {
-    return this.http.post(this.apiUrl, options).pipe(
-      catchError((err) => {
-        console.error(err);
-        return throwError(err);
-      })
-    );
+  constructor(private firestore: AngularFirestore) {}
+  createRoom(options: Game) {
+    return this.firestore.collection<Game>('games').add(options);
+  }
+  readDatabse() {
+    return this.firestore.collection('policies').snapshotChanges();
+  }
+  updateDatabse(game: Game) {
+    delete game.id;
+    this.firestore.doc('games/' + game.id).update(game);
+  }
+  deleteItem(itemId: string) {
+    this.firestore.doc('games/' + itemId).delete();
   }
 }

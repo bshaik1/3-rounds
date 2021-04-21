@@ -26,10 +26,8 @@ export class OptionsComponent implements OnInit {
 
   ngOnInit(): void {}
   createRoom() {
-    this.dataService
-      .createRoom(this.optionsFormGroup.value)
-      .subscribe((success) => {
-        this.router.navigate(['./waiting-area'], { relativeTo: this.route });
-      });
+    this.dataService.createRoom(this.optionsFormGroup.value).then((success) => {
+      this.router.navigate(['../waiting-area'], { relativeTo: this.route });
+    });
   }
 }
