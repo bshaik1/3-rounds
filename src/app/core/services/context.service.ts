@@ -8,5 +8,7 @@ export class ContextService {
   title = new BehaviorSubject<string>(null);
   myUuid: number;
   roomId: string;
-  constructor() {}
+  constructor() {
+    this.myUuid = 1690195;
+  }
 }

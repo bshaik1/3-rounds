@@ -3,12 +3,14 @@ export class Game {
   roomName: string;
   numberOfTeams: number;
   wordsPerPerson: number;
+  isStarted: boolean;
   personDetails: PersonDetails[];
 }
 export class PersonDetails {
   name: string;
   uuid: number;
   isAdmin: boolean;
+  team: number;
   constructor(details?: any) {
     details = details ?? {};
     this.name = details.name;

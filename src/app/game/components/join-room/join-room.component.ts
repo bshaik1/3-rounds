@@ -10,6 +10,7 @@ import { PersonDetails } from 'src/app/shared/models/game.model';
   styleUrls: ['./join-room.component.scss'],
 })
 export class JoinRoomComponent implements OnInit {
+  isStarted = false;
   constructor(
     private dataService: DataService,
     private contextService: ContextService,
@@ -22,6 +23,11 @@ export class JoinRoomComponent implements OnInit {
     this.dataService.getGame(id).subscribe((doc) => {
       if (doc.exists) {
         const game = doc.data();
+        // If game already started dont join.
+        if (game.isStarted) {
+          this.isStarted = true;
+          return;
+        }
         const currentPerson = new PersonDetails({ name });
         this.contextService.roomId = id;
         this.contextService.myUuid = currentPerson.uuid;

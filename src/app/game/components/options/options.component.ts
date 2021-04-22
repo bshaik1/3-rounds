@@ -36,9 +36,11 @@ export class OptionsComponent implements OnInit {
   createRoom() {
     const that = this;
     const gameDetails = this.optionsFormGroup.value;
+    gameDetails.isStarted = false;
     const uuid = generateUuid();
     gameDetails.personDetails[0].uuid = uuid;
     gameDetails.personDetails[0].isAdmin = true;
+    // Save in context service
     this.contextService.myUuid = uuid;
     // Save uuid to local storage
     this.dataService.createRoom(gameDetails).then((success) => {
