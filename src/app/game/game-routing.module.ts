@@ -12,6 +12,10 @@ const routes: Routes = [
     component: OptionsComponent,
   },
   {
+    path: 'waiting-area/:id',
+    component: WaitingAreaComponent,
+  },
+  {
     path: 'waiting-area',
     component: WaitingAreaComponent,
   },
