@@ -7,5 +7,15 @@ export class Game {
 }
 export class PersonDetails {
   name: string;
-  uuid: string;
+  uuid: number;
+  isAdmin: boolean;
+  constructor(details?: any) {
+    details = details ?? {};
+    this.name = details.name;
+    this.uuid = generateUuid();
+    this.isAdmin = false;
+  }
+}
+export function generateUuid() {
+  return Math.round(Math.random() * 3000000 + Math.random() * 1000000);
 }

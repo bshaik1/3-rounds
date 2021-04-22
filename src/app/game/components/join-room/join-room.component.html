@@ -1,1 +1,24 @@
-<p>join-room works!</p>
+<ion-card>
+  <ion-card-header>
+    <ion-card-title> Please Enter Room Code </ion-card-title>
+  </ion-card-header>
+  <ion-card-content>
+    <ion-list lines="full" class="ion-no-margin">
+      <ion-item>
+        <ion-label position="floating">Room Code</ion-label>
+        <ion-input #roomCode></ion-input>
+      </ion-item>
+      <ion-item>
+        <ion-label position="floating">Your Name</ion-label>
+        <ion-input #name></ion-input>
+      </ion-item>
+    </ion-list>
+    <ion-button
+      (click)="joinRoom(roomCode.value, name.value)"
+      expand="block"
+      shape="round"
+    >
+      Create Room
+    </ion-button>
+  </ion-card-content>
+</ion-card>

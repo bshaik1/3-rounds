@@ -13,11 +13,11 @@ export class DataService {
     return this.firestore.collection<Game>('games').add(options);
   }
   getGame(id: string) {
-    return this.firestore.doc('games/' + id).get();
+    return this.firestore.doc<Game>('games/' + id).get();
   }
-  updateGame(game: Game) {
+  updateGame(game: Game, id: string) {
     delete game.id;
-    this.firestore.doc('games/' + game.id).update(game);
+    return this.firestore.doc('games/' + id).update(game);
   }
   deleteGame(id: string) {
     this.firestore.doc('games/' + id).delete();

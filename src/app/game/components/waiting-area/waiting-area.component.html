@@ -1,11 +1,18 @@
-<ion-list lines="full" class="ion-no-margin">
-  <ion-list-header lines="full">
-    <ion-label>Room Id: {{ roomId }} - Players' List</ion-label>
-  </ion-list-header>
-  <ion-item *ngFor="let person of personDetails">
-    <ion-label position="floating">{{ person.name }}</ion-label>
-  </ion-item>
-</ion-list>
-<ion-button (click)="startGame()" expand="block" shape="round">
-  Start Game
-</ion-button>
+<ion-card>
+  <ion-card-header>
+    <ion-card-title>Room Id: {{ roomId }} </ion-card-title>
+  </ion-card-header>
+  <ion-card-content>
+    <ion-list lines="full" class="ion-no-margin">
+      <ion-list-header lines="full">
+        <ion-label>Players' List</ion-label>
+      </ion-list-header>
+      <ion-item *ngFor="let person of personDetails">
+        <ion-label position="floating">{{ person.name }}</ion-label>
+      </ion-item>
+    </ion-list>
+    <ion-button (click)="startGame()" expand="block" shape="round">
+      Start Game
+    </ion-button>
+  </ion-card-content>
+</ion-card>
