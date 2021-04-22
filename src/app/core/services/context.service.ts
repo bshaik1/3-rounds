@@ -6,5 +6,7 @@ import { BehaviorSubject } from 'rxjs';
 })
 export class ContextService {
   title = new BehaviorSubject<string>(null);
+  myUuid: number;
+  roomId: string;
   constructor() {}
 }

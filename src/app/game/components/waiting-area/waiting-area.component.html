@@ -1,1 +1,11 @@
-<p>waiting-area works!</p>
+<ion-list lines="full" class="ion-no-margin">
+  <ion-list-header lines="full">
+    <ion-label>Room Id: {{ roomId }} - Players' List</ion-label>
+  </ion-list-header>
+  <ion-item *ngFor="let person of personDetails">
+    <ion-label position="floating">{{ person.name }}</ion-label>
+  </ion-item>
+</ion-list>
+<ion-button (click)="startGame()" expand="block" shape="round">
+  Start Game
+</ion-button>
