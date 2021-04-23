@@ -5,6 +5,7 @@ export class Game {
   wordsPerPerson: number;
   isStarted: boolean;
   personDetails: PersonDetails[];
+  words: Words[];
 }
 export class PersonDetails {
   name: string;
@@ -16,6 +17,15 @@ export class PersonDetails {
     this.name = details.name;
     this.uuid = generateUuid();
     this.isAdmin = false;
+  }
+}
+export class Words {
+  value: string;
+  uuid: number;
+  constructor(word?: any) {
+    word = word ?? {};
+    this.value = word.value;
+    this.uuid = word.uuid;
   }
 }
 export function generateUuid() {

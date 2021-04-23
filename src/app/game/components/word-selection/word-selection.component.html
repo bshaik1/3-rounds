@@ -1,1 +1,22 @@
-<p>word-selection works!</p>
+<ion-card>
+  <ion-card-header>
+    <ion-card-title>Word Selection</ion-card-title>
+  </ion-card-header>
+  <ion-card-content>
+    <ion-list lines="full" class="ion-no-margin">
+      <ion-list-header lines="full">
+        <ion-label>Provide {{ game?.wordsPerPerson }} words</ion-label>
+      </ion-list-header>
+      <ion-item *ngFor="let form of formGroupArray; let i = index">
+        <ion-label position="floating">Word {{ i + 1 }}</ion-label>
+        <ion-input [formControl]="form"></ion-input>
+      </ion-item>
+    </ion-list>
+    <ion-button (click)="confirmWords()" expand="block" shape="round">
+      Confirm Words
+    </ion-button>
+    <ion-button (click)="refreshRandomWords()" expand="block" shape="round">
+      Refresh Words
+    </ion-button>
+  </ion-card-content>
+</ion-card>

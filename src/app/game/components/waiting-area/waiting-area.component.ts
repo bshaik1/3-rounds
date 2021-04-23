@@ -26,6 +26,7 @@ export class WaitingAreaComponent implements OnInit {
     this.myUuid = contextService.myUuid;
     if (!this.roomId) {
       this.roomId = this.route.snapshot.params.id;
+      this.contextService.roomId = this.roomId;
     }
     this.subs.push(
       dataService.listenerOnCurrentGame(this.roomId).subscribe((game: Game) => {

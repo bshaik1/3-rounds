@@ -40,6 +40,7 @@ export class OptionsComponent implements OnInit {
     const uuid = generateUuid();
     gameDetails.personDetails[0].uuid = uuid;
     gameDetails.personDetails[0].isAdmin = true;
+    gameDetails.words = [];
     // Save in context service
     this.contextService.myUuid = uuid;
     // Save uuid to local storage

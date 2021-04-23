@@ -1,3 +1,4 @@
+import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { AngularFirestore } from '@angular/fire/firestore';
 import { Game } from 'src/app/shared/models/game.model';
@@ -8,7 +9,7 @@ import { environment } from 'src/environments/environment';
 })
 export class DataService {
   apiUrl = environment.apiUrl;
-  constructor(private firestore: AngularFirestore) {}
+  constructor(private firestore: AngularFirestore, private http: HttpClient) {}
   createRoom(options: Game) {
     return this.firestore.collection<Game>('games').add(options);
   }
@@ -24,5 +25,10 @@ export class DataService {
   }
   listenerOnCurrentGame(id: string) {
     return this.firestore.doc('games/' + id).valueChanges();
+  }
+  getRandomWords(wordsPerPerson: number) {
+    return this.http.get<string[]>(
+      `https://random-word-api.herokuapp.com/word?number=${wordsPerPerson}`
+    );
   }
 }
