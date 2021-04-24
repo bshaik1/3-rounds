@@ -1,1 +1,50 @@
-<p>game-screen works!</p>
+<!-- Waiting -->
+<ion-content *ngIf="!isStarted"> Waiting... </ion-content>
+<!-- My game -->
+<ion-content *ngIf="isStarted && myTurn">
+  <ion-chip *ngFor="let score of scores" color="primary">
+    <ion-label>Team{{ score?.team }}: {{ score?.value }}</ion-label>
+  </ion-chip>
+  <ion-card>
+    <ion-card-header>
+      <ion-card-title>My Turn</ion-card-title>
+      <ion-card-subtitle
+        >Time Remaining => {{ secondsRemaining }}</ion-card-subtitle
+      >
+    </ion-card-header>
+    <ion-card-content>
+      <strong class="capitalize">{{ currentWord?.value }}</strong>
+      <ion-button
+        *ngIf="!currentWord"
+        (click)="showWord()"
+        expand="block"
+        shape="round"
+      >
+        Show Word
+      </ion-button>
+      <ion-button
+        color="success"
+        (click)="correct()"
+        expand="block"
+        shape="round"
+      >
+        Correct !!
+      </ion-button>
+      <ion-button
+        color="warning"
+        (click)="wrong()"
+        expand="block"
+        shape="round"
+      >
+        Wrong
+      </ion-button>
+    </ion-card-content>
+  </ion-card>
+</ion-content>
+<ion-content *ngIf="isStarted && !myTurn">
+  <ion-chip *ngFor="let score of scores" color="primary">
+    <ion-label>Team{{ score.team }}: {{ score.value }}</ion-label>
+  </ion-chip>
+  Current Player is {{ currentPlayerName }}
+</ion-content>
+<!-- Other's game -->

@@ -3,7 +3,7 @@ import { FormArray, FormControl, FormGroup } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ContextService } from 'src/app/core/services/context.service';
 import { DataService } from 'src/app/core/services/data.service';
-import { generateUuid } from 'src/app/shared/models/game.model';
+import { Game, generateUuid } from 'src/app/shared/models/game.model';
 //import { UniqueDeviceID } from '@ionic-native/unique-device-id/ngx';
 @Component({
   selector: 'rnds-options',
@@ -35,12 +35,18 @@ export class OptionsComponent implements OnInit {
   ngOnInit(): void {}
   createRoom() {
     const that = this;
-    const gameDetails = this.optionsFormGroup.value;
+    const gameDetails = this.optionsFormGroup.value as Game;
     gameDetails.isStarted = false;
     const uuid = generateUuid();
     gameDetails.personDetails[0].uuid = uuid;
     gameDetails.personDetails[0].isAdmin = true;
     gameDetails.words = [];
+    gameDetails.played = [];
+    gameDetails.unplayed = [];
+    // Initialize scores for teams
+    for (let i = 0; i < gameDetails.numberOfTeams; i++) {
+      gameDetails.scores.push({ team: i + 1, value: 0, log: [] });
+    }
     // Save in context service
     this.contextService.myUuid = uuid;
     // Save uuid to local storage

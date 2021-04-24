@@ -34,7 +34,7 @@ export class WaitingAreaComponent implements OnInit {
         this.isAdmin =
           this.personDetails.find((pd) => pd.uuid === this.myUuid)?.isAdmin ??
           false;
-        if (game.isStarted) {
+        if (game.roomClosed) {
           this.router.navigate(['/game/word-selection']);
         }
       })
@@ -47,7 +47,7 @@ export class WaitingAreaComponent implements OnInit {
       this.dataService.getGame(this.roomId).subscribe((doc) => {
         if (doc.exists) {
           const game = doc.data();
-          game.isStarted = true;
+          game.roomClosed = true;
           this.assignTeamsRandomly(game.personDetails, game.numberOfTeams);
           this.dataService.updateGame(game, this.roomId).then((success) => {});
         } else {
