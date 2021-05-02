@@ -1,7 +1,7 @@
 {
   "$schema": "./node_modules/@angular/cli/lib/config/schema.json",
   "version": 1,
-  "defaultProject": "rnds",
+  "defaultProject": "3 Rounds",
   "newProjectRoot": "projects",
   "projects": {
     "rnds": {
