@@ -13,9 +13,5 @@ export class ContextService {
   players: PersonDetails[];
   playedWords: Words[];
   myTeam: number;
-  constructor() {
-    //TODO: Remove these lines. Only for testing;
-    this.myUuid = 1690195;
-    this.roomId = 'FY1xOe6FHP4qC4DOSdLs';
-  }
+  constructor() {}
 }
