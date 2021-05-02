@@ -1,5 +1,6 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
+import { EndGameComponent } from './components/end-game/end-game.component';
 import { GameScreenComponent } from './components/game-screen/game-screen.component';
 import { GameComponent } from './components/game/game.component';
 import { JoinRoomComponent } from './components/join-room/join-room.component';
@@ -32,6 +33,10 @@ const routes: Routes = [
   {
     path: 'game-screen',
     component: GameScreenComponent,
+  },
+  {
+    path: 'end-game',
+    component: EndGameComponent,
   },
 ];
 

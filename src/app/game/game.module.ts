@@ -10,9 +10,10 @@ import { JoinRoomComponent } from './components/join-room/join-room.component';
 import { WaitingAreaComponent } from './components/waiting-area/waiting-area.component';
 import { WordSelectionComponent } from './components/word-selection/word-selection.component';
 import { GameScreenComponent } from './components/game-screen/game-screen.component';
+import { EndGameComponent } from './components/end-game/end-game.component';
 
 @NgModule({
-  declarations: [GameComponent, OptionsComponent, JoinRoomComponent, WaitingAreaComponent, WordSelectionComponent, GameScreenComponent],
+  declarations: [GameComponent, OptionsComponent, JoinRoomComponent, WaitingAreaComponent, WordSelectionComponent, GameScreenComponent, EndGameComponent],
   imports: [CommonModule, ReactiveFormsModule, GameRoutingModule, IonicModule],
 })
 export class GameModule {}

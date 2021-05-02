@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 import { IonDatetime } from '@ionic/angular';
 import { Subscription } from 'rxjs';
 import { ContextService } from 'src/app/core/services/context.service';
@@ -39,7 +40,8 @@ export class GameScreenComponent implements OnInit {
 
   constructor(
     private dataService: DataService,
-    private contextService: ContextService
+    private contextService: ContextService,
+    private router: Router
   ) {
     this.subs.push(
       dataService
@@ -108,6 +110,9 @@ export class GameScreenComponent implements OnInit {
       this.contextService.playedWords = [];
       // pause timer
       game.roundNumber += 1;
+      if (game.roundNumber > 3) {
+        this.router.navigate(['/game/end-game']);
+      }
     }
     const index = randomNumber(0, this.contextService.unplayedWords.length - 1);
     this.currentWord = this.contextService.unplayedWords[index];
