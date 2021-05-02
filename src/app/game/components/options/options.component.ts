@@ -51,8 +51,8 @@ export class OptionsComponent implements OnInit {
     gameDetails.unplayed = [];
     gameDetails.roundNumber = 1;
     // Initialize scores for teams
+    gameDetails.scores = [];
     for (let i = 0; i < gameDetails.numberOfTeams; i++) {
-      gameDetails.scores = [];
       gameDetails.scores.push({ team: i + 1, value: 0, log: [] });
     }
     // Save in context service

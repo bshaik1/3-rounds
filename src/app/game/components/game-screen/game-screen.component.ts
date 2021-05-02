@@ -56,7 +56,9 @@ export class GameScreenComponent implements OnInit {
             (pd) => pd.uuid === this.contextService.myUuid
           ).team;
           this.scores = game.scores;
-          this.currentDeadline = new Date(game['currentDeadline'].toDate());
+          if (game['currentDeadline']) {
+            this.currentDeadline = new Date(game['currentDeadline'].toDate());
+          }
           if (!contextService.players) {
             contextService.players = game.personDetails;
           }
