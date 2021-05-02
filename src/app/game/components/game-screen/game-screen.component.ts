@@ -100,7 +100,6 @@ export class GameScreenComponent implements OnInit {
           this.contextService.playedWords = [];
         }
         this.setCurrentWord(game, true);
-        this.saveGame(game, this.contextService.roomId);
       }
     });
   }
@@ -125,6 +124,7 @@ export class GameScreenComponent implements OnInit {
       }, 1000);
     }
     this.currentDeadline = game.currentDeadline;
+    this.saveGame(game, this.contextService.roomId);
   }
   correct() {
     this.dataService.getGame(this.contextService.roomId).subscribe((doc) => {
@@ -146,18 +146,10 @@ export class GameScreenComponent implements OnInit {
 
         // update current player to next player if time is up
         if (this.secondsRemaining == '00:00') {
-          game.currenPlayer = game.personDetails.find(
-            (ppd, i) =>
-              ppd.team !== this.contextService.myTeam &&
-              i >
-                game.personDetails.findIndex(
-                  (pd) => pd.uuid === this.contextService.myUuid
-                )
-          ).uuid;
+          this.setNextPlayer(game);
         } else {
           this.setCurrentWord(game, false);
         }
-        this.saveGame(game, this.contextService.roomId);
       }
     });
   }
@@ -165,9 +157,27 @@ export class GameScreenComponent implements OnInit {
   wrong() {
     // dont update played words
     // dont update unplayed words
-    // update score
+    // dont update score
     // update current player to next player
+    this.dataService.getGame(this.contextService.roomId).subscribe((doc) => {
+      if (doc.exists) {
+        const game = doc.data();
+        this.setNextPlayer(game);
+      }
+    });
   }
   //#endregion
   ngOnInit(): void {}
+
+  setNextPlayer(game: Game) {
+    game.currenPlayer = game.personDetails.find(
+      (ppd, i) =>
+        ppd.team !== this.contextService.myTeam &&
+        i >
+          game.personDetails.findIndex(
+            (pd) => pd.uuid === this.contextService.myUuid
+          )
+    ).uuid;
+    this.saveGame(game, this.contextService.roomId);
+  }
 }
