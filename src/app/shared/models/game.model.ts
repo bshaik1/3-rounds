@@ -12,6 +12,7 @@ export class Game {
   unplayed: Words[];
   played: Words[];
   scores: Score[];
+  currentWord: Words;
 }
 export class PersonDetails {
   name: string;

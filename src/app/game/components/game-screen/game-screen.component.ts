@@ -24,6 +24,7 @@ export class GameScreenComponent implements OnInit {
   currentWord: Words;
   scores: Score[];
   currentDeadline: Date;
+  interval: any;
 
   public get currentPlayerName(): string {
     return this.contextService.players.find(
@@ -32,19 +33,7 @@ export class GameScreenComponent implements OnInit {
   }
   private timeRemaining: string;
   public get secondsRemaining() {
-    setTimeout(() => {
-      if (this.currentDeadline) {
-        const value =
-          (this.currentDeadline.getTime() - new Date().getTime()) / 1000;
-        this.timeRemaining =
-          value > 0
-            ? new Date(Math.round(value) * 1000).toISOString().substr(14, 5)
-            : '00:00';
-      } else {
-        this.timeRemaining = '00:00';
-      }
-    });
-    return this.timeRemaining;
+    return this.timeRemaining ?? '00:00';
   }
 
   constructor(
@@ -56,10 +45,14 @@ export class GameScreenComponent implements OnInit {
         .listenerOnCurrentGame(this.contextService.roomId)
         .subscribe((game: Game) => {
           this.currentPlayer = game.currenPlayer;
+          this.currentWord = game.currentWord;
           contextService.unplayedWords = game.unplayed;
           contextService.playedWords = game.played;
+          contextService.myTeam = game.personDetails.find(
+            (pd) => pd.uuid === this.contextService.myUuid
+          ).team;
           this.scores = game.scores;
-          this.currentDeadline = game['currentDeadline'].toDate();
+          this.currentDeadline = new Date(game['currentDeadline'].toDate());
           if (!contextService.players) {
             contextService.players = game.personDetails;
           }
@@ -106,23 +99,67 @@ export class GameScreenComponent implements OnInit {
           this.contextService.unplayedWords = game.unplayed;
           this.contextService.playedWords = [];
         }
-        this.setCurrentWord(game);
+        this.setCurrentWord(game, true);
         this.saveGame(game, this.contextService.roomId);
       }
     });
   }
-  setCurrentWord(game: Game) {
+  setCurrentWord(game: Game, resetTimer: boolean) {
     const index = randomNumber(0, this.contextService.unplayedWords.length - 1);
     this.currentWord = this.contextService.unplayedWords[index];
+    game.currentWord = this.currentWord;
     // Start Timer
-    game.currentDeadline = addMinutes(new Date(), 2);
+    if (resetTimer) {
+      game.currentDeadline = addMinutes(new Date(), 2);
+      this.interval = setInterval(() => {
+        const value =
+          (this.currentDeadline.getTime() - new Date().getTime()) / 1000;
+        if (value > 0) {
+          this.timeRemaining = new Date(Math.round(value) * 1000)
+            .toISOString()
+            .substr(14, 5);
+        } else {
+          this.timeRemaining = '00:00';
+          clearInterval(this.interval);
+        }
+      }, 1000);
+    }
     this.currentDeadline = game.currentDeadline;
   }
   correct() {
-    // update played words
-    // update unplayed words
-    // update score
-    // update current player to next player
+    this.dataService.getGame(this.contextService.roomId).subscribe((doc) => {
+      if (doc.exists) {
+        const game = doc.data();
+        // update played words
+        game.played.push(this.currentWord);
+        // update unplayed words
+        game.unplayed.splice(
+          game.unplayed.findIndex((up) => up.value === this.currentWord.value),
+          1
+        );
+        const currentScore = game.scores.find(
+          (sc) => sc.team === this.contextService.myTeam
+        );
+        // update score
+        currentScore.value += 1;
+        // also update log;
+
+        // update current player to next player if time is up
+        if (this.secondsRemaining == '00:00') {
+          game.currenPlayer = game.personDetails.findIndex(
+            (ppd, i) =>
+              ppd.team !== this.contextService.myTeam &&
+              i >
+                game.personDetails.findIndex(
+                  (pd) => pd.uuid === this.contextService.myUuid
+                )
+          );
+        } else {
+          this.setCurrentWord(game, false);
+        }
+        this.saveGame(game, this.contextService.roomId);
+      }
+    });
   }
 
   wrong() {

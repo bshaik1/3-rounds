@@ -12,6 +12,7 @@ export class ContextService {
   unplayedWords: Words[];
   players: PersonDetails[];
   playedWords: Words[];
+  myTeam: number;
   constructor() {
     //TODO: Remove these lines. Only for testing;
     this.myUuid = 1690195;

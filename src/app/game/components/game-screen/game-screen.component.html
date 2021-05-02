@@ -32,6 +32,7 @@
       </ion-button>
       <ion-button
         color="warning"
+        *ngIf="secondsRemaining === '00:00'"
         (click)="wrong()"
         expand="block"
         shape="round"
