@@ -43,6 +43,7 @@ export class OptionsComponent implements OnInit {
     gameDetails.words = [];
     gameDetails.played = [];
     gameDetails.unplayed = [];
+    gameDetails.roundNumber = 1;
     // Initialize scores for teams
     for (let i = 0; i < gameDetails.numberOfTeams; i++) {
       gameDetails.scores.push({ team: i + 1, value: 0, log: [] });

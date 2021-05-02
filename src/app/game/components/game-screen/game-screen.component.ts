@@ -25,6 +25,7 @@ export class GameScreenComponent implements OnInit {
   scores: Score[];
   currentDeadline: Date;
   interval: any;
+  roundNumber: number;
 
   public get currentPlayerName(): string {
     return this.contextService.players.find(
@@ -46,6 +47,7 @@ export class GameScreenComponent implements OnInit {
         .subscribe((game: Game) => {
           this.currentPlayer = game.currenPlayer;
           this.currentWord = game.currentWord;
+          this.roundNumber = game.roundNumber;
           contextService.unplayedWords = game.unplayed;
           contextService.playedWords = game.played;
           contextService.myTeam = game.personDetails.find(
@@ -66,7 +68,7 @@ export class GameScreenComponent implements OnInit {
               this.myTurn = false;
             }
           } else if (
-            game.words.length ===
+            game.words.length >=
               game.personDetails.length * game.wordsPerPerson &&
             !game.currenPlayer &&
             game.personDetails[0].uuid === contextService.myUuid
@@ -93,17 +95,20 @@ export class GameScreenComponent implements OnInit {
     this.dataService.getGame(this.contextService.roomId).subscribe((doc) => {
       if (doc.exists) {
         const game = doc.data();
-        if (this.contextService.unplayedWords.length === 0) {
-          game.unplayed = game.played;
-          game.played = [];
-          this.contextService.unplayedWords = game.unplayed;
-          this.contextService.playedWords = [];
-        }
+
         this.setCurrentWord(game, true);
       }
     });
   }
   setCurrentWord(game: Game, resetTimer: boolean) {
+    if (this.contextService.unplayedWords.length === 0) {
+      game.unplayed = game.played;
+      game.played = [];
+      this.contextService.unplayedWords = game.unplayed;
+      this.contextService.playedWords = [];
+      // pause timer
+      game.roundNumber += 1;
+    }
     const index = randomNumber(0, this.contextService.unplayedWords.length - 1);
     this.currentWord = this.contextService.unplayedWords[index];
     game.currentWord = this.currentWord;

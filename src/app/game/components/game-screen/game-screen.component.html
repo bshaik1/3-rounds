@@ -1,8 +1,9 @@
+<ion-label class="ion-margin">Round Number: {{ roundNumber }}</ion-label>
 <!-- Waiting -->
 <ion-content *ngIf="!isStarted"> Waiting... </ion-content>
 <!-- My game -->
 <ion-content *ngIf="isStarted && myTurn">
-  <ion-chip *ngFor="let score of scores" color="primary">
+  <ion-chip class="ion-margin" *ngFor="let score of scores" color="primary">
     <ion-label>Team{{ score?.team }}: {{ score?.value }}</ion-label>
   </ion-chip>
   <ion-card>
@@ -46,6 +47,7 @@
   <ion-chip *ngFor="let score of scores" color="primary">
     <ion-label>Team{{ score.team }}: {{ score.value }}</ion-label>
   </ion-chip>
+  <br />
   Current Player is {{ currentPlayerName }}
 </ion-content>
 <!-- Other's game -->

@@ -13,6 +13,7 @@ export class Game {
   played: Words[];
   scores: Score[];
   currentWord: Words;
+  roundNumber: number;
 }
 export class PersonDetails {
   name: string;
