@@ -13,7 +13,7 @@ export class DataService {
   createRoom(options: Game) {
     return this.firestore.collection<Game>('games').add(options);
   }
-  getGame(id: string) {
+  getGame(id: string | number) {
     return this.firestore.doc<Game>('games/' + id).get();
   }
   updateGame(game: Game, id: string) {

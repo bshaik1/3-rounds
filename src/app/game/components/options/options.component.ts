@@ -12,6 +12,12 @@ import { Game, generateUuid } from 'src/app/shared/models/game.model';
 })
 export class OptionsComponent implements OnInit {
   optionsFormGroup: FormGroup;
+  get nameFormControl() {
+    return this.optionsFormGroup
+      .get('personDetails')
+      .get('0')
+      .get('name') as FormControl;
+  }
   constructor(
     private contextService: ContextService,
     private dataService: DataService,
@@ -46,6 +52,7 @@ export class OptionsComponent implements OnInit {
     gameDetails.roundNumber = 1;
     // Initialize scores for teams
     for (let i = 0; i < gameDetails.numberOfTeams; i++) {
+      gameDetails.scores = [];
       gameDetails.scores.push({ team: i + 1, value: 0, log: [] });
     }
     // Save in context service

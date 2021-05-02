@@ -8,7 +8,9 @@
         <ion-label>Players' List</ion-label>
       </ion-list-header>
       <ion-item *ngFor="let person of personDetails">
-        <ion-label position="floating">{{ person.name }}</ion-label>
+        <ion-label color="primary" position="floating">{{
+          person.name
+        }}</ion-label>
       </ion-item>
     </ion-list>
     <ion-button

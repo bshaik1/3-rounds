@@ -19,7 +19,7 @@ export class JoinRoomComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {}
-  joinRoom(id: string, name: string) {
+  joinRoom(id: string | number, name: string | number) {
     this.dataService.getGame(id).subscribe((doc) => {
       if (doc.exists) {
         const game = doc.data();
@@ -31,10 +31,10 @@ export class JoinRoomComponent implements OnInit {
           this.roomClosed = false;
         }
         const currentPerson = new PersonDetails({ name });
-        this.contextService.roomId = id;
+        this.contextService.roomId = id as string;
         this.contextService.myUuid = currentPerson.uuid;
         game.personDetails.push({ ...currentPerson });
-        this.dataService.updateGame(game, id).then((success) => {
+        this.dataService.updateGame(game, id as string).then((success) => {
           this.router.navigate(['../waiting-area'], { relativeTo: this.route });
         });
       } else {
