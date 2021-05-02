@@ -146,14 +146,14 @@ export class GameScreenComponent implements OnInit {
 
         // update current player to next player if time is up
         if (this.secondsRemaining == '00:00') {
-          game.currenPlayer = game.personDetails.findIndex(
+          game.currenPlayer = game.personDetails.find(
             (ppd, i) =>
               ppd.team !== this.contextService.myTeam &&
               i >
                 game.personDetails.findIndex(
                   (pd) => pd.uuid === this.contextService.myUuid
                 )
-          );
+          ).uuid;
         } else {
           this.setCurrentWord(game, false);
         }
