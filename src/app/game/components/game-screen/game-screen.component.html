@@ -16,7 +16,7 @@
     <ion-card-content>
       <strong class="capitalize">{{ currentWord?.value }}</strong>
       <ion-button
-        *ngIf="!currentWord"
+        *ngIf="!(currentWord && currentDeadline)"
         (click)="showWord()"
         expand="block"
         shape="round"

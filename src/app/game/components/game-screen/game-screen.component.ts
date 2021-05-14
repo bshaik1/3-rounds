@@ -57,7 +57,9 @@ export class GameScreenComponent implements OnInit {
           ).team;
           this.scores = game.scores;
           if (game['currentDeadline']) {
-            this.currentDeadline = new Date(game['currentDeadline'].toDate());
+            this.currentDeadline = new Date(game.currentDeadline.toDate());
+          } else {
+            this.currentDeadline = game.currentDeadline;
           }
           if (!contextService.players) {
             contextService.players = game.personDetails;
@@ -70,6 +72,9 @@ export class GameScreenComponent implements OnInit {
             } else {
               // Others turn
               this.myTurn = false;
+              if (this.interval) {
+                clearInterval(this.interval);
+              }
             }
           } else if (
             game.words.length >=
@@ -121,7 +126,7 @@ export class GameScreenComponent implements OnInit {
     game.currentWord = this.currentWord;
     // Start Timer
     if (resetTimer) {
-      game.currentDeadline = addMinutes(new Date(), 2);
+      game.currentDeadline = addMinutes(new Date(), 0.1);
       this.interval = setInterval(() => {
         const value =
           (this.currentDeadline.getTime() - new Date().getTime()) / 1000;
@@ -182,14 +187,19 @@ export class GameScreenComponent implements OnInit {
   ngOnInit(): void {}
 
   setNextPlayer(game: Game) {
-    game.currenPlayer = game.personDetails.find(
-      (ppd, i) =>
-        ppd.team !== this.contextService.myTeam &&
-        i >
-          game.personDetails.findIndex(
-            (pd) => pd.uuid === this.contextService.myUuid
-          )
-    ).uuid;
-    this.saveGame(game, this.contextService.roomId);
+    this.dataService
+      .deleteCurrentDeadline(this.contextService.roomId)
+      .then(() => {
+        delete game.currentDeadline;
+        game.currenPlayer = game.personDetails.find(
+          (ppd, i) =>
+            ppd.team !== this.contextService.myTeam &&
+            i >
+              game.personDetails.findIndex(
+                (pd) => pd.uuid === this.contextService.myUuid
+              )
+        ).uuid;
+        this.saveGame(game, this.contextService.roomId);
+      });
   }
 }
