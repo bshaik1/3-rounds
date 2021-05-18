@@ -1,9 +1,10 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit, Optional } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ContextService } from 'src/app/core/services/context.service';
 import { DataService } from 'src/app/core/services/data.service';
 import { Game, PersonDetails } from 'src/app/shared/models/game.model';
 import { Subscription } from 'rxjs';
+import { Clipboard } from '@ionic-native/clipboard/ngx';
 
 @Component({
   selector: 'rnds-waiting-area',
@@ -20,7 +21,8 @@ export class WaitingAreaComponent implements OnInit {
     private contextService: ContextService,
     private dataService: DataService,
     private router: Router,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    @Optional() private clipboard: Clipboard
   ) {
     this.roomId = contextService.roomId;
     this.myUuid = contextService.myUuid;
@@ -55,6 +57,14 @@ export class WaitingAreaComponent implements OnInit {
         }
       })
     );
+  }
+  async copyRoomId() {
+    this.clipboard?.copy(this.roomId);
+    if (navigator.clipboard) {
+      try {
+        await navigator.clipboard.writeText(this.roomId);
+      } catch (err) {}
+    }
   }
   assignTeamsRandomly(personDetails: PersonDetails[], numberOfTeams: number) {
     for (let index = 0; index < personDetails.length; index++) {

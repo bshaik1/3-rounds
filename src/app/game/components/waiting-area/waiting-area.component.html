@@ -1,6 +1,9 @@
 <ion-card>
   <ion-card-header>
     <ion-card-title>Room Id: {{ roomId }} </ion-card-title>
+    <ion-button (click)="copyRoomId()"
+      ><ion-icon name="copy-outline"></ion-icon
+    ></ion-button>
   </ion-card-header>
   <ion-card-content>
     <ion-list lines="full" class="ion-no-margin">

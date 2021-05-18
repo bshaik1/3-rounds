@@ -15,31 +15,33 @@
     </ion-card-header>
     <ion-card-content>
       <strong class="capitalize">{{ currentWord?.value }}</strong>
-      <ion-button
-        *ngIf="!(currentWord && currentDeadline)"
-        (click)="showWord()"
-        expand="block"
-        shape="round"
-      >
-        Show Word
-      </ion-button>
-      <ion-button
-        color="success"
-        (click)="correct()"
-        expand="block"
-        shape="round"
-      >
-        Correct !!
-      </ion-button>
-      <ion-button
-        color="warning"
-        *ngIf="secondsRemaining === '00:00'"
-        (click)="wrong()"
-        expand="block"
-        shape="round"
-      >
-        Wrong
-      </ion-button>
+      <ng-container
+        *ngIf="!(currentWord && currentDeadline); then block; else elseBlock"
+      ></ng-container>
+      <ng-template #block>
+        <ion-button (click)="showWord()" expand="block" shape="round">
+          Show Word
+        </ion-button>
+      </ng-template>
+      <ng-template #elseBlock>
+        <ion-button
+          color="success"
+          (click)="correct()"
+          expand="block"
+          shape="round"
+        >
+          Correct !!
+        </ion-button>
+        <ion-button
+          color="warning"
+          *ngIf="endOfTurn"
+          (click)="wrong()"
+          expand="block"
+          shape="round"
+        >
+          Wrong
+        </ion-button>
+      </ng-template>
     </ion-card-content>
   </ion-card>
 </ion-content>

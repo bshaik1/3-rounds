@@ -27,6 +27,7 @@ export class GameScreenComponent implements OnInit {
   currentDeadline: Date;
   interval: any;
   roundNumber: number;
+  endOfTurn = false;
 
   public get currentPlayerName(): string {
     return this.contextService.players.find(
@@ -50,8 +51,6 @@ export class GameScreenComponent implements OnInit {
           this.currentPlayer = game.currenPlayer;
           this.currentWord = game.currentWord;
           this.roundNumber = game.roundNumber;
-          contextService.unplayedWords = game.unplayed;
-          contextService.playedWords = game.played;
           contextService.myTeam = game.personDetails.find(
             (pd) => pd.uuid === this.contextService.myUuid
           ).team;
@@ -101,6 +100,7 @@ export class GameScreenComponent implements OnInit {
   }
   //#region My Turn
   showWord() {
+    this.endOfTurn = false;
     this.dataService.getGame(this.contextService.roomId).subscribe((doc) => {
       if (doc.exists) {
         const game = doc.data();
@@ -110,19 +110,17 @@ export class GameScreenComponent implements OnInit {
     });
   }
   setCurrentWord(game: Game, resetTimer: boolean) {
-    if (this.contextService.unplayedWords.length === 0) {
+    if (game.unplayed.length === 0) {
       game.unplayed = game.played;
       game.played = [];
-      this.contextService.unplayedWords = game.unplayed;
-      this.contextService.playedWords = [];
       // pause timer
       game.roundNumber += 1;
       if (game.roundNumber > 3) {
         this.router.navigate(['/game/end-game']);
       }
     }
-    const index = randomNumber(0, this.contextService.unplayedWords.length - 1);
-    this.currentWord = this.contextService.unplayedWords[index];
+    const index = randomNumber(0, game.unplayed.length - 1);
+    this.currentWord = game.unplayed[index];
     game.currentWord = this.currentWord;
     // Start Timer
     if (resetTimer) {
@@ -135,6 +133,7 @@ export class GameScreenComponent implements OnInit {
             .toISOString()
             .substr(14, 5);
         } else {
+          this.endOfTurn = true;
           this.timeRemaining = '00:00';
           clearInterval(this.interval);
         }
@@ -162,7 +161,7 @@ export class GameScreenComponent implements OnInit {
         // also update log;
 
         // update current player to next player if time is up
-        if (this.secondsRemaining == '00:00') {
+        if (this.endOfTurn) {
           this.setNextPlayer(game);
         } else {
           this.setCurrentWord(game, false);
@@ -187,19 +186,18 @@ export class GameScreenComponent implements OnInit {
   ngOnInit(): void {}
 
   setNextPlayer(game: Game) {
-    this.dataService
-      .deleteCurrentDeadline(this.contextService.roomId)
-      .then(() => {
-        delete game.currentDeadline;
-        game.currenPlayer = game.personDetails.find(
-          (ppd, i) =>
-            ppd.team !== this.contextService.myTeam &&
-            i >
-              game.personDetails.findIndex(
-                (pd) => pd.uuid === this.contextService.myUuid
-              )
-        ).uuid;
-        this.saveGame(game, this.contextService.roomId);
-      });
+    // Clearing context so that it is reset for next player
+    game.currentDeadline = null;
+    game.currentWord = null;
+    debugger;
+    // Finding the next player and setting it.
+    const myIndex = game.personDetails.findIndex(
+      (pd) => pd.uuid === this.contextService.myUuid
+    );
+    game.currenPlayer =
+      game.personDetails[
+        myIndex == game.personDetails.length - 1 ? 0 : myIndex + 1
+      ]?.uuid;
+    this.saveGame(game, this.contextService.roomId);
   }
 }

@@ -27,8 +27,8 @@ export class OptionsComponent implements OnInit {
     this.contextService.title.next('Options');
     this.optionsFormGroup = new FormGroup({
       roomName: new FormControl(),
-      numberOfTeams: new FormControl(),
-      wordsPerPerson: new FormControl(),
+      numberOfTeams: new FormControl('2'),
+      wordsPerPerson: new FormControl('3'),
       personDetails: new FormArray([
         new FormGroup({
           name: new FormControl(),

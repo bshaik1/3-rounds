@@ -9,9 +9,7 @@ export class ContextService {
   title = new BehaviorSubject<string>(null);
   myUuid: number;
   roomId: string;
-  unplayedWords: Words[];
   players: PersonDetails[];
-  playedWords: Words[];
   myTeam: number;
   constructor() {}
 }
