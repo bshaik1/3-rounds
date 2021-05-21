@@ -11,13 +11,13 @@
         <ion-label>Players' List</ion-label>
       </ion-list-header>
       <ion-item *ngFor="let person of personDetails">
-        <ion-label color="primary" position="floating">{{
+        <ion-label color="favorite">{{
           person.name
         }}</ion-label>
       </ion-item>
     </ion-list>
     <ion-button
-      *ngIf="isAdmin"
+     
       (click)="startGame()"
       expand="block"
       shape="round"
