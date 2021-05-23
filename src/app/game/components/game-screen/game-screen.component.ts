@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { IonDatetime } from '@ionic/angular';
-import { Subscription } from 'rxjs';
+import { Observable, of, Subscription } from 'rxjs';
 import { ContextService } from 'src/app/core/services/context.service';
 import { DataService } from 'src/app/core/services/data.service';
 import {
@@ -51,6 +51,7 @@ export class GameScreenComponent implements OnInit {
           this.currentPlayer = game.currenPlayer;
           this.currentWord = game.currentWord;
           this.roundNumber = game.roundNumber;
+          this.checkForEndOfGame(game);
           contextService.myTeam = game.personDetails.find(
             (pd) => pd.uuid === this.contextService.myUuid
           ).team;
@@ -98,6 +99,37 @@ export class GameScreenComponent implements OnInit {
   saveGame(game: Game, id: string) {
     this.dataService.updateGame(game, id).then(() => {});
   }
+
+  checkForEndOfGame(game: Game) {
+    if (game.roundNumber > 3) {
+      this.router.navigate(['/game/end-game']);
+    }
+  }
+
+  resetTimer(game: Game, totalTimerInMinutes?: number) {
+    if (!totalTimerInMinutes) totalTimerInMinutes = 0.1;
+    game.currentDeadline = addMinutes(new Date(), totalTimerInMinutes);
+    this.interval = setInterval(() => {
+      const value =
+        (this.currentDeadline.getTime() - new Date().getTime()) / 1000;
+      if (value > 0) {
+        this.timeRemaining = new Date(Math.round(value) * 1000)
+          .toISOString()
+          .substr(14, 5);
+      } else {
+        this.endOfTurn = true;
+        this.timeRemaining = '00:00';
+        clearInterval(this.interval);
+      }
+    }, 1000);
+  }
+  pauseTimer(): Observable<number> {
+    clearInterval(this.interval);
+    const timeRemainingInSec =
+      (this.currentDeadline.getTime() - new Date().getTime()) / 1000;
+    confirm('Round Complete');
+    return of(Math.round(timeRemainingInSec) / 60);
+  }
   //#region My Turn
   showWord() {
     this.endOfTurn = false;
@@ -113,31 +145,18 @@ export class GameScreenComponent implements OnInit {
     if (game.unplayed.length === 0) {
       game.unplayed = game.played;
       game.played = [];
-      // pause timer
-      game.roundNumber += 1;
-      if (game.roundNumber > 3) {
-        this.router.navigate(['/game/end-game']);
-      }
+      this.pauseTimer().subscribe((remaingTimeInMin) => {
+        game.roundNumber += 1;
+        this.resetTimer(game, remaingTimeInMin);
+        this.checkForEndOfGame(game);
+      });
     }
     const index = randomNumber(0, game.unplayed.length - 1);
     this.currentWord = game.unplayed[index];
     game.currentWord = this.currentWord;
     // Start Timer
     if (resetTimer) {
-      game.currentDeadline = addMinutes(new Date(), 0.1);
-      this.interval = setInterval(() => {
-        const value =
-          (this.currentDeadline.getTime() - new Date().getTime()) / 1000;
-        if (value > 0) {
-          this.timeRemaining = new Date(Math.round(value) * 1000)
-            .toISOString()
-            .substr(14, 5);
-        } else {
-          this.endOfTurn = true;
-          this.timeRemaining = '00:00';
-          clearInterval(this.interval);
-        }
-      }, 1000);
+      this.resetTimer(game, 0.1);
     }
     this.currentDeadline = game.currentDeadline;
     this.saveGame(game, this.contextService.roomId);
