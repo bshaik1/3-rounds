@@ -1,5 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import * as confetti from 'canvas-confetti';
+import { DataService } from '../../../core/services/data.service';
+import { ContextService } from '../../../core/services/context.service';
+import { Game, Score } from '../../../shared/models/game.model';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'rnds-end-game',
@@ -7,7 +11,10 @@ import * as confetti from 'canvas-confetti';
   styleUrls: ['./end-game.component.css'],
 })
 export class EndGameComponent implements OnInit {
-  constructor() {}
+  subs: Subscription[] = [];
+  highestScore: Score ;
+  constructor(private dataService: DataService,
+    private contextService: ContextService) {}
 
   ngOnInit(): void {
     confetti.create()({
@@ -18,5 +25,14 @@ export class EndGameComponent implements OnInit {
         x: 0.5,
       },
     });
-  }
+    this.subs.push(
+      this.dataService
+        .listenerOnCurrentGame(this.contextService.roomId)
+        .subscribe((game: Game) => {
+          this.highestScore =   game.scores.reduce(function(prevTeam: Score, currTeam: Score) {
+            return prevTeam.value > currTeam.value ? prevTeam : currTeam;
+        });
+       
+  }))
+}
 }
